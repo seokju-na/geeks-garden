@@ -1,0 +1,19 @@
+{
+  "name": "git-grass",
+  "version": "0.0.0",
+  "productName": "Git Grass",
+  "appId": "me.seokju.GitGrass",
+  "description": "We are looking for world best lawn manager at GitHub",
+  "main": "./main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seokju-na/git-grass.git"
+  },
+  "author": {
+    "name": "Seokju Na",
+    "email": "seokju.me@gmail.com",
+    "url": "https://seokju.me"
+  },
+  "dependencies": {
+  }
+}

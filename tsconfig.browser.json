@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/browser/",
+    "types": []
+  },
+  "include": [
+    "src/core/**/*.ts",
+    "src/libs/**/*.ts",
+    "src/browser/**/*.ts"
+  ],
+  "exclude": [
+    "src/main-process/**/*.ts",
+    "src/browser/test.ts",
+    "src/browser/**/*.spec.ts"
+  ]
+}

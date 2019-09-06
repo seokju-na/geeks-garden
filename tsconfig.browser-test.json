@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/browser-test",
+    "types": [
+      "jasmine",
+      "node"
+    ]
+  },
+  "files": [
+    "src/browser/test.ts",
+    "src/browser/polyfills.ts"
+  ],
+  "include": [
+    "src/core/**/*.ts",
+    "src/libs/**/*.ts",
+    "src/browser/**/*.spec.ts"
+  ]
+}

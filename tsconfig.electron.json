@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/electron/",
+    "target": "es2017",
+    "types": []
+  },
+  "include": [
+    "src/core/**/*.ts",
+    "src/libs/**/*.ts",
+    "src/main-process/**/*.ts"
+  ],
+  "exclude": [
+    "src/browser/**/*.ts"
+  ]
+}
