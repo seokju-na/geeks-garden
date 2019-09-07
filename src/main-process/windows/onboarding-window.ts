@@ -1,8 +1,8 @@
 import { Window } from '../interfaces/window';
 
-export class AppWindow extends Window {
+export class OnboardingWindow extends Window {
   constructor() {
-    super('browser/app/index.html', {
+    super('browser/onboarding/index.html', {
       show: false,
     });
   }

@@ -31,65 +31,6 @@ interface IpcActionHandlerMetadata {
 }
 
 /**
- * Decorator for create ipc action server instance.
- *
- * @example
- * @IpcActionServer('myNamespace')
- * class SomeService {
- *   ...
- *
- *   @IpcActionHandler('create')
- *   async createSomething(data?: RequestData): Promise<ResponseData> {
- *     // ...
- *   }
- * }
- */
-export function IpcActionServer(namespace: string) {
-  return (target: any): any => {
-    return class extends target {
-      protected _ipc: _IpcActionServer;
-
-      constructor(...args: any[]) {
-        super(...args);
-
-        this._ipc = new _IpcActionServer(namespace);
-        const metadataList: IpcActionHandlerMetadata[] =
-          Reflect.getMetadata(IPC_ACTION_HANDLER_METADATA_TOKEN, this.constructor)
-          || [];
-
-        for (const { actionName, handlerMethodName } of metadataList) {
-          const handler = this[handlerMethodName];
-
-          if (handler) {
-            this._ipc.setActionHandler(actionName, handler.bind(this));
-          }
-        }
-      }
-    };
-  }
-}
-
-/**
- * Decorator for registering action handler in specific class.
- */
-export const IpcActionHandler = (actionName: string): PropertyDecorator => (target, propertyKey) => {
-  const metadataList: IpcActionHandlerMetadata[] =
-    Reflect.getMetadata(IPC_ACTION_HANDLER_METADATA_TOKEN, target.constructor)
-    || [];
-
-  const metadata: IpcActionHandlerMetadata = {
-    actionName,
-    handlerMethodName: propertyKey as string,
-  };
-
-  Reflect.defineMetadata(
-    IPC_ACTION_HANDLER_METADATA_TOKEN,
-    [...metadataList, metadata],
-    target.constructor,
-  );
-};
-
-/**
  * Ipc action server used in main process.
  * When action is requested, handle the action and response result or error which generated from
  * registered handlers.
@@ -102,7 +43,7 @@ export const IpcActionHandler = (actionName: string): PropertyDecorator => (targ
  *     return result as string;
  * });
  */
-class _IpcActionServer {
+class IpcActionServerInstance {
   readonly _ipc: IpcMain;
 
   // private readonly actionHandler
@@ -161,6 +102,65 @@ class _IpcActionServer {
     );
   }
 }
+
+/**
+ * Decorator for create ipc action server instance.
+ *
+ * @example
+ * @IpcActionServer('myNamespace')
+ * class SomeService {
+ *   ...
+ *
+ *   @IpcActionHandler('create')
+ *   async createSomething(data?: RequestData): Promise<ResponseData> {
+ *     // ...
+ *   }
+ * }
+ */
+export function IpcActionServer(namespace: string) {
+  return (target: any): any => {
+    return class extends target {
+      protected _ipc: IpcActionServerInstance;
+
+      constructor(...args: any[]) {
+        super(...args);
+
+        this._ipc = new IpcActionServerInstance(namespace);
+        const metadataList: IpcActionHandlerMetadata[] =
+          Reflect.getMetadata(IPC_ACTION_HANDLER_METADATA_TOKEN, this.constructor)
+          || [];
+
+        for (const { actionName, handlerMethodName } of metadataList) {
+          const handler = this[handlerMethodName];
+
+          if (handler) {
+            this._ipc.setActionHandler(actionName, handler.bind(this));
+          }
+        }
+      }
+    };
+  };
+}
+
+/**
+ * Decorator for registering action handler in specific class.
+ */
+export const IpcActionHandler = (actionName: string): PropertyDecorator => (target, propertyKey) => {
+  const metadataList: IpcActionHandlerMetadata[] =
+    Reflect.getMetadata(IPC_ACTION_HANDLER_METADATA_TOKEN, target.constructor)
+    || [];
+
+  const metadata: IpcActionHandlerMetadata = {
+    actionName,
+    handlerMethodName: propertyKey as string,
+  };
+
+  Reflect.defineMetadata(
+    IPC_ACTION_HANDLER_METADATA_TOKEN,
+    [...metadataList, metadata],
+    target.constructor,
+  );
+};
 
 /**
  * Ipc action client used in renderer process.
