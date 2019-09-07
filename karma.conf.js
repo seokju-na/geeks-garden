@@ -1,5 +1,7 @@
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
 
+const CI = process.env.CI || false;
+
 module.exports = function (config) {
   config.set({
     basePath: '',
@@ -15,12 +17,6 @@ module.exports = function (config) {
       useIframe: false,
       clearContext: false, // leave Jasmine Spec Runner output visible in browser
     },
-    files: [
-      { pattern: 'src/assets/**/*', watched: false, included: false, served: true, nocache: false },
-    ],
-    proxies: {
-      '/assets/': '/base/src/assets/',
-    },
     coverageIstanbulReporter: {
       dir: require('path').join(__dirname, './coverage/browser/'),
       reports: ['html', 'lcovonly', 'text-summary'],
@@ -30,9 +26,9 @@ module.exports = function (config) {
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
-    autoWatch: true,
+    autoWatch: !CI,
     browsers: ['Electron'],
-    singleRun: false,
-    restartOnFileChange: true,
+    singleRun: CI,
+    restartOnFileChange: !CI,
   });
 };
