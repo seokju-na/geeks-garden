@@ -1,13 +1,12 @@
 const { DefinePlugin, NoEmitOnErrorsPlugin } = require('webpack');
 const path = require('path');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 const PROD = process.env.NODE_ENV === 'production';
 
 const config = {
   name: 'main-process',
   mode: PROD ? 'production' : 'development',
-  devtool: 'source-map',
+  devtool: PROD ? 'source-map' : 'inline-source-map',
   entry: {
     main: path.resolve(__dirname, 'src/main-process/main.ts'),
     preload: path.resolve(__dirname, 'src/core/preload.js'),
@@ -23,10 +22,24 @@ const config = {
     rules: [
       {
         test: /\.ts$/,
-        loader: 'awesome-typescript-loader',
-        exclude: [/node_modules/, /dist/, /assets/, /test/],
+        loader: 'babel-loader',
+        exclude: [/node_modules/, /dist/],
         options: {
-          configFileName: path.resolve(__dirname, 'tsconfig.electron.json'),
+          presets: [
+            '@babel/preset-typescript',
+            [
+              '@babel/preset-env',
+              {
+                targets: {
+                  electron: require('./package.json').devDependencies.electron,
+                },
+              },
+            ],
+          ],
+          plugins: [
+            ['@babel/plugin-proposal-decorators', { legacy: true }],
+            ['@babel/plugin-proposal-class-properties', { loose: true }],
+          ],
         },
       },
     ],
@@ -45,12 +58,5 @@ const config = {
   },
   target: 'electron-main',
 };
-
-if (PROD) {
-  config.plugins.push(new UglifyJsPlugin({
-    uglifyOptions: { ecma: 7 },
-    sourceMap: true,
-  }));
-}
 
 module.exports = config;

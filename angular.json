@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "git-grass": {
+    "app": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,17 +17,15 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/browser/",
-            "index": "src/browser/index.html",
-            "main": "src/browser/main.ts",
+            "outputPath": "dist/browser/app/",
+            "index": "src/browser/app/index.html",
+            "main": "src/browser/app/main.ts",
             "polyfills": "src/browser/polyfills.ts",
             "tsConfig": "tsconfig.browser.json",
             "aot": false,
-            "assets": [
-              "src/assets"
-            ],
+            "assets": [],
             "styles": [
-              "src/browser/styles.scss"
+              "src/browser/app/styles.scss"
             ],
             "scripts": []
           },
@@ -50,18 +48,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "git-grass:build"
+            "browserTarget": "app:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "git-grass:build:production"
+              "browserTarget": "app:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "git-grass:build"
+            "browserTarget": "app:build"
           }
         },
         "test": {
@@ -71,11 +69,9 @@
             "polyfills": "src/browser/polyfills.ts",
             "tsConfig": "tsconfig.browser-test.json",
             "karmaConfig": "karma.conf.js",
-            "assets": [
-              "src/assets"
-            ],
+            "assets": [],
             "styles": [
-              "src/browser/styles.scss"
+              "src/browser/app/styles.scss"
             ],
             "scripts": []
           }
@@ -93,7 +89,68 @@
           }
         }
       }
+    },
+    "onboarding": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "gg",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/browser/onboarding/",
+            "index": "src/browser/onboarding/index.html",
+            "main": "src/browser/onboarding/main.ts",
+            "polyfills": "src/browser/polyfills.ts",
+            "tsConfig": "tsconfig.browser.json",
+            "aot": false,
+            "assets": [],
+            "styles": [
+              "src/browser/onboarding/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": []
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "onboarding:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "onboarding:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "onboarding:build"
+          }
+        }
+      }
     }
   },
-  "defaultProject": "git-grass"
+  "defaultProject": "app"
 }

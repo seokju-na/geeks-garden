@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/electron-test/",
+    "types": [
+      "mocha",
+      "node"
+    ]
+  },
+  "include": [
+    "src/core/**/*.ts",
+    "src/libs/**/*.ts",
+    "src/main-process/**/*.spec.ts"
+  ],
+  "exclude": [
+    "src/browser/**/*.ts"
+  ]
+}

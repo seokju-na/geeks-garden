@@ -3,6 +3,7 @@ import { __DARWIN__ } from '../libs/platform';
 import { Window, WindowEvents } from './interfaces/window';
 import { GithubService } from './services/github-service';
 import { AppWindow } from './windows/app-window';
+import { OnboardingWindow } from './windows/onboarding-window';
 
 class AppDelegate {
   preventQuit: boolean = false;
@@ -19,7 +20,22 @@ class AppDelegate {
   }
 
   openDefaultWindow() {
-    const win = new AppWindow();
+    this.openWindow('onboarding');
+  }
+
+  openWindow(name: 'app' | 'onboarding') {
+    let win: Window;
+
+    switch (name) {
+      case 'app':
+        win = new AppWindow();
+        break;
+      case 'onboarding':
+        win = new OnboardingWindow();
+        break;
+      default:
+        throw new Error();
+    }
 
     win.on(WindowEvents.CLOSED, () => this.removeWindow(win));
     win.open();

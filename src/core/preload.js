@@ -1,4 +1,4 @@
-const { ipcRenderer } = require('electron');
+const { ipcRenderer, remote } = require('electron');
 
 /**
  * Since we disable node integration for browser window, require electron
@@ -9,4 +9,7 @@ const { ipcRenderer } = require('electron');
  */
 window.electronFeatures = {
   ipcRenderer,
+  isDarkMode() {
+    return remote.systemPreferences.isDarkMode();
+  }
 };
