@@ -1,5 +1,4 @@
-dist: trusty
-os: linux
+dist: xenial
 
 matrix:
   fast_finish: true
@@ -12,15 +11,17 @@ language: node_js
 node_js:
   - '10.15.3'
 
+services:
+  # https://docs.travis-ci.com/user/gui-and-headless-browsers/#using-services
+  # https://benlimmer.com/2019/01/14/travis-ci-xvfb/
+  - xvfb
+
 addons:
   apt:
-    sources:
-      - ubuntu-toolchain-r-test
     packages:
-      - libstdc++-4.9-dev
-      # this package is essential for testing Electron in a headless fashion
-      # https://github.com/electron/electron/blob/master/docs/tutorial/testing-on-headless-ci.md
-      - xvfb
+      # Fix libgconf-2.so.4 errors
+      # https://github.com/cypress-io/cypress/issues/4069#issuecomment-488315675
+      - libgconf-2-4
 
 cache:
   yarn: true
