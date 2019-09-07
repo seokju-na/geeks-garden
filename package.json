@@ -22,8 +22,9 @@
     "lint": "yarn lint:browser && yarn lint:main-process",
     "lint:browser": "ng lint app",
     "lint:main-process": "tslint --project tsconfig.electron.json",
-    "test": "yarn test:browser && yarn test:main-process",
+    "test": "yarn test:browser && yarn test:libs && yarn test:main-process",
     "test:browser": "ng test app",
+    "test:libs": "mocha --opts src/libs/test.opts",
     "test:main-process": "electron-mocha --opts src/main-process/test.opts",
     "postinstall": "node scripts/patch-angular.js"
   },
@@ -75,6 +76,7 @@
     "karma-electron": "^6.3.0",
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "^1.4.0",
+    "mocha": "^6.2.0",
     "protractor": "~5.4.0",
     "rimraf": "^3.0.0",
     "ts-loader": "^6.0.4",
