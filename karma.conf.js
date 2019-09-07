@@ -1,5 +1,6 @@
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true';
 
+const path = require('path');
 const CI = process.env.CI || false;
 
 module.exports = function (config) {
@@ -27,7 +28,17 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: !CI,
-    browsers: ['Electron'],
+    customLaunchers: {
+      ElectronWithPreload: {
+        base: 'Electron',
+        browserWindowOptions: {
+          webPreferences: {
+            preload: path.resolve(__dirname, 'src/core/preload.js'),
+          },
+        },
+      },
+    },
+    browsers: ['ElectronWithPreload'],
     singleRun: CI,
     restartOnFileChange: !CI,
   });
