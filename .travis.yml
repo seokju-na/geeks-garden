@@ -1,3 +1,6 @@
+dist: trusty
+os: linux
+
 matrix:
   fast_finish: true
 
@@ -9,17 +12,19 @@ language: node_js
 node_js:
   - '10.15.3'
 
+addons:
+  apt:
+    packages:
+      # this package is essential for testing Electron in a headless fashion
+      # https://github.com/electron/electron/blob/master/docs/tutorial/testing-on-headless-ci.md
+      - xvfb
+
 cache:
   yarn: true
+  timeout: 600
   directories:
-    - node_modules
     - $HOME/.electron
     - $HOME/.cache/electron-builder
-
-before_install:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-  - sleep 3
 
 script:
   - yarn lint
