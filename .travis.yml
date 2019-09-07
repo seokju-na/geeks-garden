@@ -14,7 +14,10 @@ node_js:
 
 addons:
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
     packages:
+      - libstdc++-4.9-dev
       # this package is essential for testing Electron in a headless fashion
       # https://github.com/electron/electron/blob/master/docs/tutorial/testing-on-headless-ci.md
       - xvfb
