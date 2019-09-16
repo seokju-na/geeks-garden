@@ -15,5 +15,7 @@
     "url": "https://seokju.me"
   },
   "dependencies": {
+    "@sentry/electron": "^0.17.3",
+    "keytar": "^5.0.0-beta.0"
   }
 }
