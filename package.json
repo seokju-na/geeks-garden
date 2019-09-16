@@ -26,6 +26,7 @@
     "test:browser": "ng test app",
     "test:libs": "mocha --opts src/libs/test.opts",
     "test:main-process": "electron-mocha --opts src/main-process/test.opts",
+    "package": "ts-node scripts/package",
     "script:patch-angular": "node scripts/patch-angular.js",
     "script:rebuild": "electron-rebuild keytar",
     "postinstall": "yarn script:patch-angular && yarn script:rebuild"
@@ -83,8 +84,8 @@
     "codelyzer": "^5.0.0",
     "copy-webpack-plugin": "^5.0.4",
     "cross-env": "^5.2.1",
-    "devtron": "^1.4.0",
     "electron": "6.0.7",
+    "electron-builder": "^21.2.0",
     "electron-mocha": "^8.1.2",
     "electron-rebuild": "^1.8.6",
     "jasmine-core": "~3.4.0",
