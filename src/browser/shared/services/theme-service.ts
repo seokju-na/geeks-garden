@@ -1,8 +1,10 @@
-import { Inject, Injectable, OnDestroy } from '@angular/core';
-import { from, Subject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
+import { Injectable, OnDestroy } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
+import { distinctUntilChanged, tap } from 'rxjs/operators';
+import { getElectronFeatures } from '../../../core/electron-features';
+import { DARK_BACKGROUND_COLOR, LIGHT_BACKGROUND_COLOR } from '../../../main-process/constants/background-colors';
 import { Themes } from '../../ui/style/theme';
-import { THEME_DATABASE, ThemeDatabase } from '../databases/theme-database';
+import { ApiService } from './api-service';
 
 @Injectable()
 export class ThemeService implements OnDestroy {
@@ -10,12 +12,15 @@ export class ThemeService implements OnDestroy {
   private readonly setThemeSubscription: Subscription;
   private _currentTheme: Themes | null = null;
 
-  constructor(@Inject(THEME_DATABASE) private themeDatabase: ThemeDatabase) {
+  constructor(private readonly api: ApiService) {
     this.setThemeSubscription = this.setThemes.asObservable().pipe(
       distinctUntilChanged(),
-      debounceTime(50),
-      tap(theme => this.applyThemeToHtml(theme)),
-      switchMap(theme => from(this.themeDatabase.updateTheme(theme))),
+      tap(theme => {
+        this.api.setStorageData('theme', theme);
+        this.api.setStorageData('backgroundColor', this.getBackgroundColorByTheme(theme));
+
+        this.applyThemeToHtml(theme);
+      }),
     ).subscribe();
   }
 
@@ -24,7 +29,11 @@ export class ThemeService implements OnDestroy {
   }
 
   initialize() {
-    const theme = this.themeDatabase.theme!;
+    let theme = this.api.getStorageData<Themes>('theme');
+
+    if (theme == null) {
+      theme = this.getDefaultTheme();
+    }
 
     this.applyThemeToHtml(theme);
     this.setTheme(theme);
@@ -47,5 +56,20 @@ export class ThemeService implements OnDestroy {
 
     this._currentTheme = theme;
     elem.classList.add(this._currentTheme);
+  }
+
+  private getBackgroundColorByTheme(theme: Themes) {
+    switch (theme) {
+      case Themes.BASIC_LIGHT_THEME:
+        return LIGHT_BACKGROUND_COLOR;
+      case Themes.BASIC_DARK_THEME:
+        return DARK_BACKGROUND_COLOR;
+    }
+  }
+
+  private getDefaultTheme() {
+    return getElectronFeatures().isDarkMode()
+      ? Themes.BASIC_DARK_THEME
+      : Themes.BASIC_LIGHT_THEME;
   }
 }
