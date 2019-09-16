@@ -1,0 +1,32 @@
+<div fxLayout="column" class="wrapper">
+  <gg-onboarding-navigator fxFlex="none" title="Enter existing token"></gg-onboarding-navigator>
+  <form
+    fxFlex="1 1 auto" fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="5px"
+    [formGroup]="form" (submit)="onSubmit()"
+    class="form"
+  >
+    <div
+      fxFlex="none" gdArea gdRows="repeat(1, 1fr)" gdColumns="1fr 3fr" gdGap="5px"
+    >
+      <label gdRow="1" gdColumn="1" ggFormFieldLabel for="token-input">Token:</label>
+      <gg-form-field gdRow="1" gdColumn="2 / 4">
+        <input #tokeInput ggInput formControlName="token" id="token-input" maxlength="100">
+      </gg-form-field>
+    </div>
+
+    <div fxFlex="1 1 auto">
+      <gg-form-field-error [show]="showErrorMessage">{{errorMessage}}</gg-form-field-error>
+    </div>
+
+    <div fxFlex="none" fxLayout fxLayoutGap="5px">
+      <button
+        fxFlex="1 1 auto"
+        [disabled]="form.invalid"
+        [showSpinner]="submitting"
+        gg-button color="primary"
+      >
+        Enter
+      </button>
+    </div>
+  </form>
+</div>

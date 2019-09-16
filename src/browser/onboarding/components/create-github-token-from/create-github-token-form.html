@@ -1,0 +1,50 @@
+<div fxLayout="column" class="wrapper">
+  <gg-onboarding-navigator fxFlex="none" title="Create token"></gg-onboarding-navigator>
+  <form
+    fxFlex="1 1 auto"
+    [formGroup]="form" (submit)="onSubmit()"
+    fxLayout="column" fxLayoutAlign="space-between" fxLayoutGap="5px"
+    class="form"
+  >
+    <div fxFlex="none"
+         gdArea [gdRows]="need2faCode ? 'repeat(3, 1fr)' : 'repeat(2, 1fr)'" gdColumns="1fr 2fr 1fr" gdGap="5px">
+      <label gdRow="1" gdColumn="1" ggFormFieldLabel for="username-input">Username:</label>
+      <gg-form-field gdRow="1" gdColumn="2 / 4">
+        <input #usernameInput ggInput [readOnly]="need2faCode"
+               formControlName="username" id="username-input" maxlength="100">
+      </gg-form-field>
+
+      <label gdRow="2" gdColumn="1" ggFormFieldLabel for="password-input">Password:</label>
+      <gg-form-field gdRow="2" gdColumn="2 / 4">
+        <input
+          ggInput
+          [readOnly]="need2faCode"
+          formControlName="password" type="password" id="password-input"
+          maxlength="100"
+        >
+      </gg-form-field>
+
+      <ng-container *ngIf="need2faCode">
+        <label gdRow="3" gdColumn="1" ggFormFieldLabel for="otp-input">2fa code:</label>
+        <gg-form-field gdRow="3" gdColumn="2 / 3">
+          <input #otpInput ggInput formControlName="code" id="otp-input" maxlength="6">
+        </gg-form-field>
+      </ng-container>
+    </div>
+
+    <div fxFlex="1 1 auto">
+      <gg-form-field-error [show]="showErrorMessage">{{errorMessage}}</gg-form-field-error>
+    </div>
+
+    <div fxFlex="none" fxLayout fxLayoutGap="5px">
+      <button
+        [disabled]="form.invalid"
+        [showSpinner]="submitting"
+        fxFlex="1 1 100%"
+        gg-button color="primary"
+      >
+        Create
+      </button>
+    </div>
+  </form>
+</div>

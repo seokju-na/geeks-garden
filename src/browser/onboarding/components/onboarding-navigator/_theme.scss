@@ -1,0 +1,9 @@
+@import "../../../ui/style/theming";
+
+@mixin onboarding-navigator-theme($theme) {
+  $background: map-get($theme, background);
+
+  .OnboardingNavigator {
+    background-color: theming-color($background, background-highlight);
+  }
+}

@@ -1,8 +1,8 @@
 {
-  "name": "git-grass",
+  "name": "geeks-grass",
   "version": "0.0.0",
-  "productName": "Git Grass",
-  "appId": "me.seokju.GitGrass",
+  "productName": "Geeks Grass",
+  "appId": "me.seokju.GeeksGrass",
   "description": "We are looking for world best lawn manager at GitHub",
   "main": "./main.js",
   "repository": {

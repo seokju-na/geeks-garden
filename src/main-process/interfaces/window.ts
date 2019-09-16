@@ -26,6 +26,7 @@ export abstract class Window extends EventEmitter {
     this.url = encodePathAsUrl(__dirname, url);
     this.options = {
       disableZooming: environment.production,
+      frame: false,
       webPreferences: {
         preload: path.resolve(__dirname, 'preload.js'),
       },
@@ -34,6 +35,14 @@ export abstract class Window extends EventEmitter {
     this.instance = new BrowserWindow(this.options);
 
     this.handleEvents();
+  }
+
+  open() {
+    this.instance.loadURL(this.url);
+  }
+
+  close() {
+    this.instance.close();
   }
 
   protected handleEvents() {
@@ -46,13 +55,12 @@ export abstract class Window extends EventEmitter {
         this.instance.webContents.setVisualZoomLevelLimits(1, 1);
       }
     });
-  }
 
-  open() {
-    this.instance.loadURL(this.url);
-  }
-
-  close() {
-    this.instance.close();
+    // Hide the window when it loses focus
+    // this.instance.on('blur', () => {
+    //   if (!environment.production) {
+    //     this.instance.hide();
+    //   }
+    // });
   }
 }

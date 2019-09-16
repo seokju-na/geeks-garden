@@ -1,8 +1,12 @@
-import { Window } from '../interfaces/window';
+import { Window, WindowOptions } from '../interfaces/window';
+
+interface Options extends WindowOptions {
+}
 
 export class OnboardingWindow extends Window {
-  constructor() {
+  constructor(options?: Options) {
     super('browser/onboarding/index.html', {
+      ...options,
       show: false,
     });
   }

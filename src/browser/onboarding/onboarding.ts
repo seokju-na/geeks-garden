@@ -3,10 +3,10 @@ import { ThemeService } from '../shared/services/theme-service';
 
 @Component({
   selector: 'gg-onboarding',
-  template: 'OnBoarding',
-  styleUrls: [],
+  templateUrl: './onboarding.html',
+  styleUrls: ['./onboarding.scss'],
 })
-export class OnboardingComponent {
+export class Onboarding {
   constructor(private themeService: ThemeService) {
     this.themeService.initialize();
   }

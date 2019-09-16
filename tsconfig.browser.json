@@ -13,6 +13,9 @@
   "exclude": [
     "src/main-process/**/*.ts",
     "src/browser/test.ts",
-    "src/browser/**/*.spec.ts"
+    "src/browser/**/*.spec.ts",
+    "src/libs/**/*.spec.ts",
+    "src/core/**/*.spec.ts",
+    "src/browser/testing/"
   ]
 }

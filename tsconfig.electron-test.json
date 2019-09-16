@@ -10,6 +10,7 @@
   "include": [
     "src/core/**/*.ts",
     "src/libs/**/*.ts",
+    "src/main-process/testing/",
     "src/main-process/**/*.spec.ts"
   ],
   "exclude": [
