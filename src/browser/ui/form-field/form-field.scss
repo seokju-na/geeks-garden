@@ -1,0 +1,17 @@
+@import "../style/spacing";
+
+.FormField {
+  &__content {
+    .Input {
+      display: block;
+    }
+
+    .Input, .SelectMenu {
+      width: 100%;
+
+      & ~ .FormFieldError {
+        margin-top: $spacing-third;
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+@import "../style/theming";
+
+@mixin ui-form-field-theme($theme) {
+  $warn: map-get($theme, warn);
+
+  .FormField {
+    &--invalid {
+      .Input {
+        border: 1px solid theming-color($warn);
+        //noinspection CssUnknownProperty
+        caret-color: theming-color($warn);
+
+        &:focus {
+          border-color: theming-color($warn);
+          box-shadow: 0 0 0 1px theming-color($warn);
+        }
+      }
+    }
+  }
+
+  .FormFieldError {
+    color: theming-color($warn);
+  }
+}

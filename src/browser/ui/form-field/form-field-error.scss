@@ -1,0 +1,10 @@
+@import "../style/font";
+
+.FormFieldError {
+  display: none;
+  font: {
+    size: $font-size-sm;
+    weight: $font-weight-semiBold;
+  };
+  line-height: $line-height-condensed;
+}

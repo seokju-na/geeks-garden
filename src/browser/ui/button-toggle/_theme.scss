@@ -1,0 +1,21 @@
+@import "../style/theming";
+
+@mixin ui-button-toggle-theme($theme) {
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+  $primary: map-get($theme, primary);
+
+  .ButtonToggleGroup {
+    border: 1px solid theming-color($foreground, divider);
+  }
+
+  .ButtonToggle {
+    &--checked {
+      background-color: theming-color($background, selected-button);
+    }
+
+    &.cdk-keyboard-focused, &.cdk-program-focused {
+      background-color: theming-color($background, hover);
+    }
+  }
+}
