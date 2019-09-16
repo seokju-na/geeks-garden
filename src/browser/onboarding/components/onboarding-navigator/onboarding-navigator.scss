@@ -1,0 +1,18 @@
+@import "../../../ui/style/font";
+@import "../../../ui/style/spacing";
+
+.OnboardingNavigator {
+  display: block;
+  padding: $spacing;
+
+  & .FlatButton > .Button__wrapper {
+    padding-right: $spacing-half;
+  }
+
+  &__title {
+    margin: 0;
+    padding: $spacing-half $spacing-half 0 $spacing-half;
+    font-size: 18px;
+    font-weight: $font-weight-semiBold;
+  }
+}

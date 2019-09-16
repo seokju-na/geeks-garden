@@ -4,13 +4,15 @@ import 'reflect-metadata';
 import { getElectronFeatures } from './electron-features';
 
 type IpcActionHandler<T, R> = (data?: T) => Promise<R>;
+type IpcSyncActionHandler<T, R> = (data?: T) => R;
 
-export interface IpcAction<D> {
+interface IpcAction<D> {
   name: string;
   data?: D;
+  sync: boolean;
 }
 
-export interface IpcActionResponse<R = any> {
+interface IpcAsyncActionResponse<R = any> {
   result?: R;
   error?: any;
 }
@@ -25,9 +27,18 @@ export interface IpcMessage<D> {
 }
 
 const IPC_ACTION_HANDLER_METADATA_TOKEN = '__ipc_action_handler__';
-interface IpcActionHandlerMetadata {
-  actionName: string;
+const IPC_ERROR_HANDLER_METADATA_TOKEN = '__ipc_error_handler__';
+
+interface IpcHandlerBaseMetadata {
   handlerMethodName: string;
+}
+
+interface IpcActionHandlerMetadata extends IpcHandlerBaseMetadata {
+  actionName: string;
+  sync: boolean;
+}
+
+interface IpcErrorHandlerMetadata extends IpcHandlerBaseMetadata {
 }
 
 /**
@@ -46,9 +57,9 @@ interface IpcActionHandlerMetadata {
 class IpcActionServerInstance {
   readonly _ipc: IpcMain;
 
-  // private readonly actionHandler
   private readonly actionHandlers = new Map<string, IpcActionHandler<any, any>>();
-  private actionErrorHandler: (error: any) => any;
+  private readonly syncActionHandlers = new Map<string, IpcSyncActionHandler<any, any>>();
+  private errorHandler: (error: any) => any;
   private readonly actionListener: any;
 
   constructor(public readonly namespace: string) {
@@ -71,8 +82,13 @@ class IpcActionServerInstance {
     return this;
   }
 
-  setActionErrorHandler(handler: (error: any) => any): this {
-    this.actionErrorHandler = handler;
+  setSyncActionHandler<D, R>(actionName: string, handler: IpcSyncActionHandler<D, R>) {
+    this.syncActionHandlers.set(actionName, handler);
+    return this;
+  }
+
+  setErrorHandler(handler: (error: any) => any): this {
+    this.errorHandler = handler;
     return this;
   }
 
@@ -80,26 +96,42 @@ class IpcActionServerInstance {
     window.webContents.send(this.namespace, message);
   }
 
-  private async handleIpcEvent(event: IpcMainEvent, action: IpcAction<any>): Promise<void> {
-    if (!this.actionHandlers.has(action.name)) {
+  private handleIpcEvent(event: IpcMainEvent, action: IpcAction<any>): Promise<void> {
+    const { name, data, sync } = action;
+
+    const handler = sync
+      ? this.syncActionHandlers.get(name)
+      : this.actionHandlers.get(name);
+
+    if (!handler) {
+      if (sync) {
+        throw new Error(`Cannot find sync action handler: "${this.namespace}.${name}"`);
+      }
       return;
     }
 
-    const handler = this.actionHandlers.get(action.name);
+    if (action.sync) {
+      event.returnValue = handler(data);
+    } else {
+      const channel = makeResponseChannelName(this.namespace, name);
 
+      this.executeHandler(handler, data).then(response => {
+        event.sender.send(channel, response);
+      });
+    }
+  }
+
+  private async executeHandler(handler: IpcActionHandler<any, any>, data?: any) {
     let result = null;
     let error = null;
 
     try {
-      result = await handler(action.data);
+      result = await handler(data);
     } catch (err) {
-      error = this.actionErrorHandler ? this.actionErrorHandler(err) : err;
+      error = this.errorHandler ? this.errorHandler(err) : err;
     }
 
-    event.sender.send(
-      makeResponseChannelName(this.namespace, action.name),
-      { result, error } as IpcActionResponse,
-    );
+    return { result, error } as IpcAsyncActionResponse;
   }
 }
 
@@ -126,15 +158,36 @@ export function IpcActionServer(namespace: string) {
         super(...args);
 
         this._ipc = new IpcActionServerInstance(namespace);
-        const metadataList: IpcActionHandlerMetadata[] =
+
+        const actionHandlerMetadataList: IpcActionHandlerMetadata[] =
           Reflect.getMetadata(IPC_ACTION_HANDLER_METADATA_TOKEN, this.constructor)
           || [];
 
-        for (const { actionName, handlerMethodName } of metadataList) {
+        // Register action handlers
+        for (const { actionName, handlerMethodName, sync } of actionHandlerMetadataList) {
           const handler = this[handlerMethodName];
 
           if (handler) {
-            this._ipc.setActionHandler(actionName, handler.bind(this));
+            if (sync) {
+              this._ipc.setSyncActionHandler(actionName, handler.bind(this));
+            } else {
+              this._ipc.setActionHandler(actionName, handler.bind(this));
+            }
+          }
+        }
+
+        // Register error handler
+        const errorHandlerMetadata = Reflect.getMetadata(
+          IPC_ERROR_HANDLER_METADATA_TOKEN,
+          this.constructor,
+        ) as IpcErrorHandlerMetadata;
+
+        if (errorHandlerMetadata != null) {
+          const { handlerMethodName } = errorHandlerMetadata;
+          const handler = this[handlerMethodName];
+
+          if (handler) {
+            this._ipc.setErrorHandler(handler.bind(this));
           }
         }
       }
@@ -142,10 +195,17 @@ export function IpcActionServer(namespace: string) {
   };
 }
 
+interface IpcActionHandlerOptions {
+  sync?: boolean;
+}
+
 /**
  * Decorator for registering action handler in specific class.
  */
-export const IpcActionHandler = (actionName: string): PropertyDecorator => (target, propertyKey) => {
+export const IpcActionHandler = (
+  actionName: string,
+  { sync = false }: IpcActionHandlerOptions = {},
+): PropertyDecorator => (target, propertyKey) => {
   const metadataList: IpcActionHandlerMetadata[] =
     Reflect.getMetadata(IPC_ACTION_HANDLER_METADATA_TOKEN, target.constructor)
     || [];
@@ -153,6 +213,7 @@ export const IpcActionHandler = (actionName: string): PropertyDecorator => (targ
   const metadata: IpcActionHandlerMetadata = {
     actionName,
     handlerMethodName: propertyKey as string,
+    sync,
   };
 
   Reflect.defineMetadata(
@@ -162,12 +223,25 @@ export const IpcActionHandler = (actionName: string): PropertyDecorator => (targ
   );
 };
 
+export const IpcErrorHandler = (): PropertyDecorator => (target, propertyKey) => {
+  const metadata: IpcErrorHandlerMetadata = {
+    handlerMethodName: propertyKey as string,
+  };
+
+  Reflect.defineMetadata(
+    IPC_ERROR_HANDLER_METADATA_TOKEN,
+    metadata,
+    target.constructor,
+  );
+};
+
 /**
  * Ipc action client used in renderer process.
  *
  * @example
  * const client = new IpcActionClient('service-id');
- * const result = await client.performAction<RequestData, ResponseData>('actionA', data);
+ * const asyncResult = await client.performAction<RequestData, ResponseData>('asyncAction', data);
+ * const result = client.performSyncAction('syncAction', data);
  */
 export class IpcActionClient {
   readonly _ipc: IpcRenderer;
@@ -190,10 +264,10 @@ export class IpcActionClient {
   performAction<D, R>(actionName: string, data?: D): Promise<R> {
     return new Promise<R>((resolve, reject) => {
       const channelName = makeResponseChannelName(this.namespace, actionName);
-      const action: IpcAction<D> = { name: actionName, data };
+      const action: IpcAction<D> = { name: actionName, data, sync: false };
 
       // Listen for response event for once.
-      this._ipc.once(channelName, (event: any, response: IpcActionResponse<R>) => {
+      this._ipc.once(channelName, (event: any, response: IpcAsyncActionResponse<R>) => {
         if (response.error) {
           reject(response.error);
         } else {
@@ -203,6 +277,11 @@ export class IpcActionClient {
 
       this._ipc.send(this.namespace, action);
     });
+  }
+
+  performSyncAction<D, R>(actionName: string, data?: D): R {
+    const action: IpcAction<D> = { name: actionName, data, sync: true };
+    return this._ipc.sendSync(this.namespace, action) as R;
   }
 
   onMessage<D>(): Observable<IpcMessage<D>> {

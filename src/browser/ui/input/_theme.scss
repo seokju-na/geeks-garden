@@ -1,0 +1,22 @@
+@import "../style/theming";
+
+@mixin ui-input-theme($theme) {
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+  $primary: map-get($theme, primary);
+
+  .Input {
+    background: theming-color($background, background-highlight);
+    border: 1px solid theming-color($foreground, divider);
+    color: theming-color($foreground, text);
+
+    &:focus {
+      border-color: theming-color($primary);
+      box-shadow: 0 0 0 1px theming-color($primary);
+    }
+
+    &:disabled, &[readonly] {
+      background-color: theming-color($background, background);
+    }
+  }
+}

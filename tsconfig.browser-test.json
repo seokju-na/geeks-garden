@@ -12,6 +12,7 @@
     "src/browser/polyfills.ts"
   ],
   "include": [
+    "src/browser/testing/",
     "src/core/**/*.ts",
     "src/libs/**/*.ts",
     "src/browser/**/*.spec.ts"

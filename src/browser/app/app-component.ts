@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { environment } from '../../core/environment';
-import { SomeService } from './some-service';
+import { ApiService } from '../shared/services/api-service';
 
 @Component({
   selector: 'gg-app',
@@ -8,11 +7,10 @@ import { SomeService } from './some-service';
   styleUrls: [],
 })
 export class AppComponent implements OnInit {
-  constructor(private some: SomeService) {
+  constructor(private api: ApiService) {
+    console.log(this.api.getPersistentUser());
   }
 
   ngOnInit() {
-    console.log(environment.version, environment.production);
-    this.some.hello();
   }
 }

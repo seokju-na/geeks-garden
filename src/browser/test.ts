@@ -4,8 +4,12 @@ import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting,
 } from '@angular/platform-browser-dynamic/testing';
+import { useDomMatcher } from './testing/dom-matcher';
 
 declare const require: any;
+
+// Setups
+useDomMatcher();
 
 // First, initialize the Angular testing environment.
 getTestBed().initTestEnvironment(

@@ -1,0 +1,12 @@
+@import "../ui/style/core";
+@import "../ui/all-theme";
+
+@include ui-core();
+
+.BasicLightTheme {
+  @include ui-all-theme($basic-light-theme);
+}
+
+.BasicDarkTheme {
+  @include ui-all-theme($basic-dark-theme);
+}

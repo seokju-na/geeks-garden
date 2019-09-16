@@ -1,0 +1,23 @@
+<div fxLayout="column" fxLayoutGap="10px" class="wrapper">
+  <header fxFlex="none">
+    <h1 class="title">Geeks Grass</h1>
+    <p class="subtitle">Looking for world best lawn manager at GitHub</p>
+  </header>
+
+  <div fxFlex="1 1 auto" fxLayout="column" fxLayoutGap="10px" class="actions">
+    <a gg-button color="primary" routerLink="/create-github-token-form">Create github personal access token</a>
+    <a gg-button routerLink="/enter-existing-github-token-form">Enter existing github access token</a>
+  </div>
+
+  <footer fxFlex="none" fxLayout fxLayoutAlign="space-between center">
+    <gg-checkbox>Allow anonymous logging</gg-checkbox>
+    <gg-button-toggle-group>
+      <gg-button-toggle value="light">
+        <gg-icon name="sun-fill"></gg-icon>
+      </gg-button-toggle>
+      <gg-button-toggle value="dark">
+        <gg-icon name="moon-fill"></gg-icon>
+      </gg-button-toggle>
+    </gg-button-toggle-group>
+  </footer>
+</div>

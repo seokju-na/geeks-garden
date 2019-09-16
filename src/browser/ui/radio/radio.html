@@ -1,0 +1,29 @@
+<label [attr.for]="inputId" class="RadioButton__label" #label>
+  <!--suppress HtmlUnknownTag -->
+  <div class="RadioButton__container">
+    <div class="RadioButton__outerCircle"></div>
+    <div class="RadioButton__innerCircle"></div>
+  </div>
+
+  <input
+    #input
+    class="RadioButton__input cdk-visually-hidden"
+    type="radio"
+    [id]="inputId"
+    [checked]="checked"
+    [disabled]="disabled"
+    [attr.name]="name"
+    [attr.value]="value"
+    [attr.aria-label]="ariaLabel"
+    [attr.aria-labelledby]="ariaLabelledby"
+    [attr.aria-describedby]="ariaDescribedby"
+    (change)="_onInputChange($event)"
+    (click)="_onInputClick($event)"
+  >
+
+  <!--suppress HtmlUnknownTag -->
+  <div class="RadioButton__content">
+    <span style="display:none">&nbsp;</span>
+    <ng-content></ng-content>
+  </div>
+</label>

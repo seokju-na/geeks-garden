@@ -1,0 +1,78 @@
+@import "../style/theming";
+
+@mixin ui-button-theme($theme) {
+  $primary: map-get($theme, primary);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  .Button, .FlatButton, .IconButton {
+    color: inherit;
+    background: transparent;
+  }
+
+  .Button {
+    border-radius: 2px;
+
+    &.Button--color-normal {
+      border: 1px solid theming-color($foreground, divider);
+      background-color: theming-color($background, background-highlight);
+
+      &:disabled, &[disabled="true"] {
+        border-color: theming-color($background, disabled-button);
+        color: theming-color($foreground, disabled-button);
+        background-color: theming-color($background, disabled-button);
+      }
+
+      &.cdk-keyboard-focused, &.cdk-program-focused {
+        box-shadow: 0 0 0 2px theming-color($primary, lighter);
+      }
+    }
+
+    &.Button--color-primary {
+      color: theming-color($primary, default-contrast);
+      background-color: theming-color($primary, default);
+
+      &:disabled, &[disabled="true"] {
+        color: theming-color($foreground, disabled-button);
+        background-color: theming-color($background, disabled-button);
+      }
+
+      &.cdk-keyboard-focused, &.cdk-program-focused {
+        box-shadow: 0 0 0 2px theming-color($primary, lighter);
+      }
+    }
+  }
+
+  .FlatButton {
+    border-radius: 4px;
+    border: 1px solid transparent;
+
+    &:disabled, &[disabled="true"] {
+      color: theming-color($foreground, disabled-button);
+    }
+
+    &.Button--color-primary {
+      color: theming-color($primary);
+    }
+
+    &.cdk-keyboard-focused, &.cdk-program-focused {
+      border-color: theming-color($background, focused-button);
+      box-shadow: 0 0 2px 0 theming-color($background, focused-button);
+    }
+  }
+
+  .IconButton {
+    border: 1px solid transparent;
+    border-radius: 7.5%;
+
+    &:disabled, &[disabled="true"] {
+      color: theming-color($foreground, disabled-button);
+    }
+
+    &.cdk-keyboard-focused, &.cdk-program-focused {
+      border-color: theming-color($background, focused-button);
+      box-shadow: 0 0 2px 0 theming-color($background, focused-button);
+    }
+  }
+}

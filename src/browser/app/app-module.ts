@@ -1,16 +1,22 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { EffectsModule } from '@ngrx/effects';
+import { SharedModule } from '../shared/shared-module';
 import { AppComponent } from './app-component';
-import { SomeService } from './some-service';
+import { ContributionsModule } from './contributions/contributions-module';
 
 @NgModule({
   imports: [
     BrowserModule,
-    CommonModule,
+    SharedModule,
+    EffectsModule.forRoot([]),
+    ContributionsModule,
   ],
-  declarations: [AppComponent],
-  providers: [SomeService],
+  declarations: [
+    AppComponent,
+  ],
+  providers: [
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {

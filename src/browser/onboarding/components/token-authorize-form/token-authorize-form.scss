@@ -1,0 +1,14 @@
+@import "../../../ui/style/spacing";
+
+:host {
+  display: block;
+  height: 100%;
+}
+
+.wrapper {
+  height: 100%;
+}
+
+.form {
+  padding: $spacing;
+}

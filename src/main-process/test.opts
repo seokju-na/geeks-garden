@@ -1,6 +1,6 @@
 # Mocha options for testing main process
 
---require ts-node/register
+--require src/main-process/testing/ts-hooks.js
 --require source-map-support/register
 --recursive
 src/main-process/**/*.spec.ts

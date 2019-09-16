@@ -1,0 +1,5 @@
+@import "./components/onboarding-navigator/theme";
+
+@mixin onboarding-all-theme($theme) {
+  @include onboarding-navigator-theme($theme);
+}

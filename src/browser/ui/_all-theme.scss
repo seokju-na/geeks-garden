@@ -1,0 +1,19 @@
+@import "./radio/theme";
+@import "./form-field/theme";
+@import "./icon/theme";
+@import "./input/theme";
+@import "./button/theme";
+@import "./spinner/theme";
+@import "./button-toggle/theme";
+@import "./checkbox/theme";
+
+@mixin ui-all-theme($theme) {
+  @include ui-radio-theme($theme);
+  @include ui-form-field-theme($theme);
+  @include ui-icon-theme($theme);
+  @include ui-input-theme($theme);
+  @include ui-button-theme($theme);
+  @include ui-spinner-theme($theme);
+  @include ui-button-toggle-theme($theme);
+  @include ui-checkbox-theme($theme);
+}
