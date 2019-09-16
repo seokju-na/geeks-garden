@@ -27,8 +27,8 @@ export class AnchorButton extends ButtonBase<HTMLAnchorElement> {
     super(elementRef, focusMonitor);
   }
 
-  @HostListener('click')
-  private haltDisabledEvents(event: Event): void {
+  @HostListener('click', ['$event'])
+  haltDisabledEvents(event: Event): void {
     // A disabled button shouldn't apply any actions
     if (this.disabled) {
       event.preventDefault();

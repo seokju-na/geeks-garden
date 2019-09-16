@@ -423,7 +423,7 @@ export class RadioButton implements AfterViewInit, OnInit, OnDestroy {
   }
 
   @HostListener('focus')
-  private onHostFocus(): void {
+  handleFocus(): void {
     this._inputElement.nativeElement.focus();
   }
 

@@ -38,12 +38,12 @@ export class Input extends FormFieldControl {
   }
 
   @HostListener('focus')
-  private handleFocus(): void {
+  handleFocus(): void {
     this.focused = true;
   }
 
   @HostListener('blur')
-  private handleBlur(): void {
+  handleBlur(): void {
     this.focused = false;
   }
 }

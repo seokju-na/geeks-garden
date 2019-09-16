@@ -45,7 +45,7 @@ export class ButtonToggleChange {
   ],
   host: {
     class: 'ButtonToggleGroup',
-    '[class.ButtonToggleGroup--vertical]': '_vertical',
+    '[class.ButtonToggleGroup--vertical]': 'vertical',
     role: 'group',
   },
 })

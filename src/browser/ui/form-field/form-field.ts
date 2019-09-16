@@ -13,7 +13,6 @@ import { FormFieldControl } from './form-field-control';
 import { FormFieldError } from './form-field-error';
 import { FormFieldLabel } from './form-field-label';
 
-
 @Component({
   selector: 'gg-form-field',
   templateUrl: './form-field.html',
@@ -28,7 +27,7 @@ import { FormFieldLabel } from './form-field-label';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     class: 'FormField',
-    '[class.FormField--invalid]': '_errorCaught',
+    '[class.FormField--invalid]': 'errorCaught',
     '[class.FormField--disabled]': '_control?.disabled',
     '[class.FormField--focused]': '_control?.focused',
   },
@@ -37,6 +36,10 @@ export class FormField implements AfterViewInit {
   @ContentChild(FormFieldControl, { static: false }) _control: FormFieldControl;
   @ContentChild(FormFieldLabel, { static: false }) _labelChild: FormFieldLabel;
   @ContentChildren(FormFieldError) _errorChildren: QueryList<FormFieldError>;
+
+  get errorCaught() {
+    return this._errorCaught;
+  }
 
   private _errorCaught = false;
 

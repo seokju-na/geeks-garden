@@ -58,22 +58,22 @@ export abstract class ButtonBase<T extends HTMLElement> implements OnDestroy {
   @Input() bigSize: boolean = false;
 
   @HostBinding('class.Button--showSpinner')
-  private get showSpinnerClass() {
+  get showSpinnerClass() {
     return this.showSpinner;
   }
 
   @HostBinding('class.Button--iconContains-left')
-  private get iconContainsLeftClass() {
+  get iconContainsLeftClass() {
     return this.iconContains === 'left';
   }
 
   @HostBinding('class.Button--iconContains-right')
-  private get iconContainsRightClass() {
+  get iconContainsRightClass() {
     return this.iconContains === 'right';
   }
 
   @HostBinding('class.Button--size-big')
-  private get bigSizeClass() {
+  get bigSizeClass() {
     return this.bigSize;
   }
 
