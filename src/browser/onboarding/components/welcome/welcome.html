@@ -10,7 +10,7 @@
   </div>
 
   <footer fxFlex="none" fxLayout fxLayoutAlign="space-between center">
-    <gg-checkbox>Allow anonymous logging</gg-checkbox>
+    <gg-checkbox [formControl]="allowLoggingFormValue">Allow anonymous logging</gg-checkbox>
     <gg-button-toggle-group [formControl]="themeFormValue">
       <gg-button-toggle *ngFor="let option of themeOptions" [value]="option.value">
         <gg-icon [name]="option.icon"></gg-icon>
