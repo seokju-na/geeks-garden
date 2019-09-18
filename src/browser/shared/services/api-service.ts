@@ -63,6 +63,14 @@ export class ApiService {
     );
   }
 
+  enableLogging() {
+    this.ipc.performSyncAction(ApiActions.ENABLE_LOGGING);
+  }
+
+  disableLogging() {
+    this.ipc.performSyncAction(ApiActions.DISABLE_LOGGING);
+  }
+
   logMessage(message: string) {
     this.ngZone.run(() => this.ipc.performSyncAction<LogMessagePayload, void>(
       ApiActions.LOG_MESSAGE,
