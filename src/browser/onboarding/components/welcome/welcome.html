@@ -11,12 +11,9 @@
 
   <footer fxFlex="none" fxLayout fxLayoutAlign="space-between center">
     <gg-checkbox>Allow anonymous logging</gg-checkbox>
-    <gg-button-toggle-group>
-      <gg-button-toggle value="light">
-        <gg-icon name="sun-fill"></gg-icon>
-      </gg-button-toggle>
-      <gg-button-toggle value="dark">
-        <gg-icon name="moon-fill"></gg-icon>
+    <gg-button-toggle-group [formControl]="themeFormValue">
+      <gg-button-toggle *ngFor="let option of themeOptions" [value]="option.value">
+        <gg-icon [name]="option.icon"></gg-icon>
       </gg-button-toggle>
     </gg-button-toggle-group>
   </footer>
