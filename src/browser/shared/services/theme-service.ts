@@ -22,21 +22,12 @@ export class ThemeService implements OnDestroy {
         this.applyThemeToHtml(theme);
       }),
     ).subscribe();
+
+    this.initialize();
   }
 
   get currentTheme() {
     return this._currentTheme;
-  }
-
-  initialize() {
-    let theme = this.api.getStorageData<Themes>('theme');
-
-    if (theme == null) {
-      theme = this.getDefaultTheme();
-    }
-
-    this.applyThemeToHtml(theme);
-    this.setTheme(theme);
   }
 
   setTheme(theme: Themes) {
@@ -56,6 +47,17 @@ export class ThemeService implements OnDestroy {
 
     this._currentTheme = theme;
     elem.classList.add(this._currentTheme);
+  }
+
+  private initialize() {
+    let theme = this.api.getStorageData<Themes>('theme');
+
+    if (theme == null) {
+      theme = this.getDefaultTheme();
+    }
+
+    this.applyThemeToHtml(theme);
+    this.setTheme(theme);
   }
 
   private getBackgroundColorByTheme(theme: Themes) {
