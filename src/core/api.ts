@@ -12,6 +12,8 @@ export enum ApiActions {
   SET_STORAGE_DATA = 'setStorageData',
   LOG_MESSAGE = 'logMessage',
   LOG_EXCEPTION = 'logException',
+  ENABLE_LOGGING = 'enableLogging',
+  DISABLE_LOGGING = 'disableLogging',
 }
 
 // Payloads and queries

@@ -103,6 +103,16 @@ export class ApiService extends EventEmitter {
     this.logMonitorService.logException(payload.exception);
   }
 
+  @IpcActionHandler(ApiActions.ENABLE_LOGGING, { sync: true })
+  enableLogging() {
+    this.logMonitorService.enable();
+  }
+
+  @IpcActionHandler(ApiActions.DISABLE_LOGGING, { sync: true })
+  disableLogging() {
+    this.logMonitorService.disable();
+  }
+
   @IpcErrorHandler()
   handleError(error: unknown) {
     if (isApiError(error)) {
